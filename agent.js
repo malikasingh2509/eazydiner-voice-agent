@@ -364,9 +364,13 @@ function startListening() {
   const rec = initRecognition();
   if (!rec) { setAgentStatus('Use the buttons below 👇'); return; }
 
+  // Track whether user actually said something this session
+  let gotResult = false;
+
   setMicListening();
 
   rec.onresult = (e) => {
+    gotResult = true;
     const text = e.results[0][0].transcript.trim();
     if (text) handleUserInput(text);
   };
@@ -374,22 +378,34 @@ function startListening() {
   rec.onerror = (e) => {
     console.warn('Recognition error:', e.error);
     state.isListening = false;
-    setMicIdle();
+    state.recognition = null;
+
     if (e.error === 'not-allowed') {
-      micTip.textContent = '🔴 Microphone access denied. Please allow mic in browser settings, or use the buttons below.';
+      // Mic permission denied — stop and show error
+      setMicIdle();
+      micTip.textContent = '🔴 Mic access denied. Click the 🔴 icon in Chrome address bar → Allow.';
       setAgentStatus('Mic permission denied');
-    } else if (e.error === 'no-speech') {
-      micTip.textContent = 'No speech detected. Tap mic again or use buttons below.';
-      setAgentStatus('Your turn — tap mic or use buttons below');
+    } else if (e.error === 'no-speech' || e.error === 'audio-capture') {
+      // Chrome timed out — restart silently, keep button green
+      if (!state.isSpeaking) {
+        setTimeout(() => startListening(), 100);
+      }
     } else {
-      micTip.textContent = `Error: ${e.error}. Try again or use buttons.`;
+      setMicIdle();
+      micTip.textContent = 'Mic error. Use the buttons below or tap mic to retry.';
     }
   };
 
   rec.onend = () => {
     state.isListening = false;
-    if (state.isSpeaking) return; // agent may have started speaking already
-    setMicIdle();
+    state.recognition = null;
+
+    if (gotResult) return;           // ✅ Got speech — all done, handleUserInput took over
+    if (state.isSpeaking) return;    // ✅ Agent started speaking — don't restart
+
+    // Chrome ended recognition with no result (normal — happens every ~5s of silence)
+    // → Restart automatically so button stays green and user can still speak
+    setTimeout(() => startListening(), 100);
   };
 
   state.recognition = rec;
@@ -398,6 +414,7 @@ function startListening() {
   } catch(e) {
     console.warn('Could not start recognition:', e.message);
     state.isListening = false;
+    state.recognition = null;
     setMicIdle();
     micTip.textContent = 'Could not start mic. Use the buttons below.';
   }
@@ -478,12 +495,6 @@ async function agentSpeak(text) {
   removeTypingIndicator();
   addMessage('agent', text);
   await speak(text);
-  // BUG FIX: Auto-start listening after agent finishes speaking
-  // Small delay so user knows agent is done
-  await sleep(300);
-  if (!state.isSpeaking && state.conversationIndex < CONVERSATION.length) {
-    startListening();
-  }
 }
 
 async function handleUserInput(text) {
