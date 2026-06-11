@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EazyDiner Card Advisor – AI Voice Agent powered by ElevenLabs</title>
+  <meta name="description" content="Speak with our AI voice agent to find the best EazyDiner credit card for your dining lifestyle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">🍽️</div>
+      <span class="logo-text">EazyDiner <span class="logo-accent">Card Advisor</span></span>
+    </div>
+    <div class="header-right">
+      <div class="el-status-badge" id="elBadge" title="ElevenLabs Status">
+        <span class="el-dot" id="elDot"></span>
+        <span id="elBadgeText">ElevenLabs</span>
+      </div>
+      <button class="settings-btn" id="settingsBtn" title="Configure ElevenLabs">⚙️ Settings</button>
+    </div>
+  </header>
+
+  <!-- ElevenLabs Setup Modal -->
+  <div class="modal-overlay" id="setupModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-icon">🔊</div>
+        <h2 class="modal-title">Configure <span class="el-brand">ElevenLabs</span> Voice</h2>
+        <p class="modal-subtitle">Enter your ElevenLabs API key for a hyper-realistic AI voice. Or skip to use the browser's built-in voice.</p>
+      </div>
+
+      <div class="modal-form">
+        <label class="form-label" for="apiKeyInput">ElevenLabs API Key</label>
+        <div class="input-wrap">
+          <input
+            type="password"
+            id="apiKeyInput"
+            class="form-input"
+            placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="toggle-vis" id="toggleVis" title="Show/hide key">👁️</button>
+        </div>
+        <p class="form-hint">Get your key at <a href="https://elevenlabs.io" target="_blank" class="el-link">elevenlabs.io</a> → Profile → API Keys</p>
+
+        <label class="form-label" style="margin-top:18px">Agent Voice</label>
+        <div class="voice-options" id="voiceOptions">
+          <label class="voice-option selected" data-voice="EXAVITQu4vr4xnSDxMaL">
+            <input type="radio" name="voice" value="EXAVITQu4vr4xnSDxMaL" checked hidden />
+            <div class="vo-icon">👩‍💼</div>
+            <div class="vo-info">
+              <div class="vo-name">Sarah</div>
+              <div class="vo-desc">Warm · Professional · Female</div>
+            </div>
+            <div class="vo-check">✓</div>
+          </label>
+          <label class="voice-option" data-voice="21m00Tcm4TlvDq8ikWAM">
+            <input type="radio" name="voice" value="21m00Tcm4TlvDq8ikWAM" hidden />
+            <div class="vo-icon">🎙️</div>
+            <div class="vo-info">
+              <div class="vo-name">Rachel</div>
+              <div class="vo-desc">Clear · Calm · Female</div>
+            </div>
+            <div class="vo-check">✓</div>
+          </label>
+          <label class="voice-option" data-voice="pNInz6obpgDQGcFmaJgB">
+            <input type="radio" name="voice" value="pNInz6obpgDQGcFmaJgB" hidden />
+            <div class="vo-icon">🎤</div>
+            <div class="vo-info">
+              <div class="vo-name">Adam</div>
+              <div class="vo-desc">Deep · Authoritative · Male</div>
+            </div>
+            <div class="vo-check">✓</div>
+          </label>
+        </div>
+
+        <label class="form-label" style="margin-top:18px">ElevenLabs Model</label>
+        <select class="form-select" id="modelSelect">
+          <option value="eleven_turbo_v2_5">Turbo v2.5 – Fastest (recommended)</option>
+          <option value="eleven_multilingual_v2">Multilingual v2 – Most natural</option>
+          <option value="eleven_monolingual_v1">Monolingual v1 – Stable</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-primary" id="saveApiKey">Save &amp; Enable ElevenLabs 🚀</button>
+        <button class="modal-secondary" id="skipApiKey">Skip – Use Browser Voice</button>
+      </div>
+
+      <div class="api-test-result hidden" id="apiTestResult"></div>
+    </div>
+  </div>
+
+  <main class="main">
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+      <h1 class="hero-title">Find Your Perfect<br /><span class="gradient-text">Dining Card</span></h1>
+      <p class="hero-subtitle">Talk to our AI Sales Agent to discover which EazyDiner credit card fits your lifestyle perfectly.</p>
+
+      <div class="cards-preview">
+        <div class="card-chip signature">
+          <div class="chip-icon">💎</div>
+          <div class="chip-info">
+            <div class="chip-name">Signature Card</div>
+            <div class="chip-fee">₹1,999/yr</div>
+          </div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="card-chip platinum">
+          <div class="chip-icon">⚡</div>
+          <div class="chip-info">
+            <div class="chip-name">Platinum Card</div>
+            <div class="chip-fee">Lifetime Free</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="start-btn" id="startBtn">
+        <span class="btn-icon">🎙️</span>
+        <span class="btn-text">Start Voice Consultation</span>
+        <div class="btn-glow"></div>
+      </button>
+      <p class="hint-text" id="mainHintText">Powered by ElevenLabs · Works in Chrome &amp; Edge</p>
+    </section>
+
+    <!-- Agent Interface -->
+    <section class="agent-interface hidden" id="agentSection">
+      <div class="agent-header">
+        <div class="agent-avatar" id="agentAvatar">
+          <div class="avatar-face">👩‍💼</div>
+          <div class="avatar-ring"></div>
+          <div class="speaking-indicator" id="speakingIndicator"></div>
+        </div>
+        <div class="agent-info">
+          <div class="agent-name">Priya – Card Advisor</div>
+          <div class="agent-status" id="agentStatus">Initializing…</div>
+        </div>
+        <button class="end-btn" id="endBtn">End Call</button>
+      </div>
+
+      <!-- Transcript -->
+      <div class="transcript-box" id="transcriptBox">
+        <div class="transcript-placeholder">Your conversation will appear here…</div>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="progress-bar-wrap">
+        <div class="progress-steps" id="progressSteps">
+          <div class="step active" data-step="0">Intro</div>
+          <div class="step" data-step="1">Dining Habits</div>
+          <div class="step" data-step="2">Spending</div>
+          <div class="step" data-step="3">Lifestyle</div>
+          <div class="step" data-step="4">Recommendation</div>
+        </div>
+      </div>
+
+      <!-- Mic Control -->
+      <div class="controls">
+        <button class="mic-btn idle" id="micBtn">
+          <span class="mic-icon">🎤</span>
+          <span class="mic-label" id="micLabel">Tap to Speak</span>
+          <div class="mic-pulse"></div>
+        </button>
+        <div class="mic-tip" id="micTip">Press the button and speak your answer</div>
+      </div>
+
+      <!-- Quick Reply Chips -->
+      <div class="quick-replies" id="quickReplies"></div>
+    </section>
+
+    <!-- Result Section -->
+    <section class="result-section hidden" id="resultSection">
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <div class="result-icon" id="resultIcon">💎</div>
+          <div class="result-label">Our Recommendation</div>
+          <h2 class="result-name" id="resultName">EazyDiner IndusInd Signature Card</h2>
+        </div>
+
+        <div class="match-score">
+          <div class="score-label">Match Score</div>
+          <div class="score-bar-wrap">
+            <div class="score-bar" id="scoreBar"></div>
+          </div>
+          <div class="score-value" id="scoreValue">0%</div>
+        </div>
+
+        <div class="result-why" id="resultWhy"></div>
+
+        <div class="result-benefits" id="resultBenefits"></div>
+
+        <div class="result-cta">
+          <a href="https://www.indusind.com/in/en/personal/cards/credit-card/eazydiner-indusind-bank-credit-card.html" target="_blank" class="apply-btn" id="applyBtn">
+            Apply Now 🚀
+          </a>
+          <button class="restart-btn" id="restartBtn">Start Over</button>
+        </div>
+      </div>
+
+      <!-- Card Comparison -->
+      <div class="comparison-section">
+        <h3 class="comparison-title">Full Card Comparison</h3>
+        <div class="comparison-table">
+          <div class="compare-header">
+            <div class="compare-col label-col"></div>
+            <div class="compare-col sig-col">💎 Signature</div>
+            <div class="compare-col plat-col">⚡ Platinum</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Annual Fee</div>
+            <div class="compare-col sig-col">₹1,999 + taxes</div>
+            <div class="compare-col plat-col">Lifetime Free ✅</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">EazyDiner Prime</div>
+            <div class="compare-col sig-col">1 Year (₹3,550 value)</div>
+            <div class="compare-col plat-col">3 Months (₹1,095 value)</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Dining Discount</div>
+            <div class="compare-col sig-col">25%–50% off</div>
+            <div class="compare-col plat-col">25%–50% off</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">PayEazy Savings</div>
+            <div class="compare-col sig-col">25% off (up to ₹1,000)</div>
+            <div class="compare-col plat-col">20% off (up to ₹500)</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Dining Reward Points</div>
+            <div class="compare-col sig-col">10 pts / ₹100</div>
+            <div class="compare-col plat-col">2 pts / ₹100</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Other Spends</div>
+            <div class="compare-col sig-col">4 pts / ₹100</div>
+            <div class="compare-col plat-col">2 pts / ₹100</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Free Movies</div>
+            <div class="compare-col sig-col">2/month (BookMyShow)</div>
+            <div class="compare-col plat-col">—</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Airport Lounge</div>
+            <div class="compare-col sig-col">2 visits / quarter</div>
+            <div class="compare-col plat-col">—</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Free Drink</div>
+            <div class="compare-col sig-col">At partner restaurants ✅</div>
+            <div class="compare-col plat-col">—</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Welcome Gift</div>
+            <div class="compare-col sig-col">2,000 pts + hotel voucher</div>
+            <div class="compare-col plat-col">—</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Fuel Surcharge Waiver</div>
+            <div class="compare-col sig-col">1% (₹500–₹3,000)</div>
+            <div class="compare-col plat-col">1% (₹400–₹4,000)</div>
+          </div>
+          <div class="compare-row">
+            <div class="compare-col label-col">Best For</div>
+            <div class="compare-col sig-col">Heavy diners &amp; travelers</div>
+            <div class="compare-col plat-col">Casual diners &amp; beginners</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Powered by EazyDiner × IndusInd Bank · Voice by <a href="https://elevenlabs.io" target="_blank" class="el-link">ElevenLabs</a> · AI Voice Agent Demo</p>
+  </footer>
+
+  <script src="agent.js"></script>
+</body>
+</html>
