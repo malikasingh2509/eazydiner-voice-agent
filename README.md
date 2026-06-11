@@ -2,6 +2,9 @@
 
 > An AI-powered voice sales agent that recommends the best EazyDiner credit card based on a customer's lifestyle — built with ElevenLabs TTS + Web Speech API.
 
+🔗 **Live Demo → [Try it here](https://malikasingh2509.github.io/eazydiner-voice-agent)**  
+💻 **GitHub → [malikasingh2509/eazydiner-voice-agent](https://github.com/malikasingh2509/eazydiner-voice-agent)**
+
 ---
 
 ## 📌 What This Does
@@ -44,7 +47,7 @@ The agent works **instantly without any API key** using the browser's built-in v
 
 ## 🚀 Live Demo
 
-👉 **[Try it here](https://YOUR-USERNAME.github.io/eazydiner-voice-agent)**
+👉 **[Try it here](https://malikasingh2509.github.io/eazydiner-voice-agent)**
 
 > Works best in **Google Chrome** or **Microsoft Edge**
 
