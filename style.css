@@ -746,3 +746,15 @@ body {
   .settings-btn { display: none; }
   .el-status-badge span:last-child { display: none; }
 }
+
+/* Modal Tabs */
+.modal-tabs { display: flex; gap: 8px; margin: 18px 0 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.modal-tab { background: none; border: none; color: var(--text-muted); font-family: var(--font); font-size: 0.88rem; font-weight: 500; cursor: pointer; padding: 8px 14px; border-radius: 8px 8px 0 0; transition: all 0.2s; display: flex; align-items: center; gap: 6px; border-bottom: 2px solid transparent; }
+.modal-tab:hover { color: var(--text-primary); background: rgba(255,255,255,0.04); }
+.modal-tab.active { color: var(--accent-gold); border-bottom: 2px solid var(--accent-gold); background: rgba(255,193,7,0.06); }
+.tab-badge { background: var(--accent-gold); color: #000; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 20px; text-transform: uppercase; }
+.modal-tab-content { padding-top: 18px; }
+.ai-explainer { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ai-explainer-row { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--text-secondary); }
+.free-badge { background: #22c55e; color: #000; font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-left: 6px; text-transform: uppercase; }
+.optional-badge { background: rgba(255,255,255,0.12); color: var(--text-muted); font-size: 0.65rem; font-weight: 600; padding: 2px 7px; border-radius: 20px; margin-left: 6px; text-transform: uppercase; }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EazyDiner Card Advisor – AI Voice Agent powered by ElevenLabs</title>
+  <title>EazyDiner Card Advisor – AI Voice Agent</title>
   <meta name="description" content="Speak with our AI voice agent to find the best EazyDiner credit card for your dining lifestyle." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,83 +22,88 @@
       <span class="logo-text">EazyDiner <span class="logo-accent">Card Advisor</span></span>
     </div>
     <div class="header-right">
-      <div class="el-status-badge" id="elBadge" title="ElevenLabs Status">
+      <div class="el-status-badge" id="elBadge" title="Status">
         <span class="el-dot" id="elDot"></span>
-        <span id="elBadgeText">ElevenLabs</span>
+        <span id="elBadgeText">Setting up…</span>
       </div>
-      <button class="settings-btn" id="settingsBtn" title="Configure ElevenLabs">⚙️ Settings</button>
+      <button class="settings-btn" id="settingsBtn" title="Configure">⚙️ Settings</button>
     </div>
   </header>
 
-  <!-- ElevenLabs Setup Modal -->
+  <!-- Setup Modal -->
   <div class="modal-overlay" id="setupModal">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-icon">🔊</div>
-        <h2 class="modal-title">Configure <span class="el-brand">ElevenLabs</span> Voice</h2>
-        <p class="modal-subtitle">Enter your ElevenLabs API key for a hyper-realistic AI voice. Or skip to use the browser's built-in voice.</p>
+        <div class="modal-icon">🤖</div>
+        <h2 class="modal-title">Configure <span class="el-brand">Your Agent</span></h2>
+        <p class="modal-subtitle">Add an AI brain so Priya thinks &amp; responds naturally — not from a fixed script.</p>
       </div>
 
-      <div class="modal-form">
-        <label class="form-label" for="apiKeyInput">ElevenLabs API Key</label>
+      <!-- Tabs -->
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="ai">🧠 AI Brain <span class="tab-badge">Recommended</span></button>
+        <button class="modal-tab" data-tab="voice">🔊 Voice</button>
+      </div>
+
+      <!-- AI Brain Tab (Gemini) -->
+      <div class="modal-tab-content" id="tab-ai">
+        <div class="ai-explainer">
+          <div class="ai-explainer-row"><span class="ai-exp-bad">❌</span><span>Without AI: Priya follows a fixed script, same every time</span></div>
+          <div class="ai-explainer-row"><span class="ai-exp-good">✅</span><span>With AI: Priya actually understands you and responds naturally</span></div>
+        </div>
+        <label class="form-label" for="geminiKeyInput" style="margin-top:16px">Google Gemini API Key <span class="free-badge">FREE</span></label>
         <div class="input-wrap">
-          <input
-            type="password"
-            id="apiKeyInput"
-            class="form-input"
-            placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-            autocomplete="off"
-            spellcheck="false"
-          />
+          <input type="password" id="geminiKeyInput" class="form-input" placeholder="AIzaSy..." autocomplete="off" spellcheck="false" />
+          <button class="toggle-vis" id="toggleGeminiVis" title="Show/hide key">👁️</button>
+        </div>
+        <p class="form-hint">Free at <a href="https://aistudio.google.com/apikey" target="_blank" class="el-link">aistudio.google.com/apikey</a> → Sign in with Google → "Create API Key" → Copy &amp; paste here</p>
+        <div class="api-test-result hidden" id="geminiTestResult"></div>
+      </div>
+
+      <!-- Voice Tab (ElevenLabs) -->
+      <div class="modal-tab-content hidden" id="tab-voice">
+        <label class="form-label" for="apiKeyInput">ElevenLabs API Key <span class="optional-badge">Optional</span></label>
+        <div class="input-wrap">
+          <input type="password" id="apiKeyInput" class="form-input" placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
           <button class="toggle-vis" id="toggleVis" title="Show/hide key">👁️</button>
         </div>
-        <p class="form-hint">Get your key at <a href="https://elevenlabs.io" target="_blank" class="el-link">elevenlabs.io</a> → Profile → API Keys</p>
+        <p class="form-hint">Get key at <a href="https://elevenlabs.io/app/developers/api-keys" target="_blank" class="el-link">elevenlabs.io → Developers → API Keys</a></p>
 
-        <label class="form-label" style="margin-top:18px">Agent Voice</label>
+        <label class="form-label" style="margin-top:16px">Agent Voice</label>
         <div class="voice-options" id="voiceOptions">
           <label class="voice-option selected" data-voice="EXAVITQu4vr4xnSDxMaL">
             <input type="radio" name="voice" value="EXAVITQu4vr4xnSDxMaL" checked hidden />
             <div class="vo-icon">👩‍💼</div>
-            <div class="vo-info">
-              <div class="vo-name">Sarah</div>
-              <div class="vo-desc">Warm · Professional · Female</div>
-            </div>
+            <div class="vo-info"><div class="vo-name">Sarah</div><div class="vo-desc">Warm · Professional · Female</div></div>
             <div class="vo-check">✓</div>
           </label>
           <label class="voice-option" data-voice="21m00Tcm4TlvDq8ikWAM">
             <input type="radio" name="voice" value="21m00Tcm4TlvDq8ikWAM" hidden />
             <div class="vo-icon">🎙️</div>
-            <div class="vo-info">
-              <div class="vo-name">Rachel</div>
-              <div class="vo-desc">Clear · Calm · Female</div>
-            </div>
+            <div class="vo-info"><div class="vo-name">Rachel</div><div class="vo-desc">Clear · Calm · Female</div></div>
             <div class="vo-check">✓</div>
           </label>
           <label class="voice-option" data-voice="pNInz6obpgDQGcFmaJgB">
             <input type="radio" name="voice" value="pNInz6obpgDQGcFmaJgB" hidden />
             <div class="vo-icon">🎤</div>
-            <div class="vo-info">
-              <div class="vo-name">Adam</div>
-              <div class="vo-desc">Deep · Authoritative · Male</div>
-            </div>
+            <div class="vo-info"><div class="vo-name">Adam</div><div class="vo-desc">Deep · Authoritative · Male</div></div>
             <div class="vo-check">✓</div>
           </label>
         </div>
 
-        <label class="form-label" style="margin-top:18px">ElevenLabs Model</label>
+        <label class="form-label" style="margin-top:16px">ElevenLabs Model</label>
         <select class="form-select" id="modelSelect">
           <option value="eleven_turbo_v2_5">Turbo v2.5 – Fastest (recommended)</option>
           <option value="eleven_multilingual_v2">Multilingual v2 – Most natural</option>
           <option value="eleven_monolingual_v1">Monolingual v1 – Stable</option>
         </select>
+        <div class="api-test-result hidden" id="apiTestResult"></div>
       </div>
 
       <div class="modal-actions">
-        <button class="modal-primary" id="saveApiKey">Save &amp; Enable ElevenLabs 🚀</button>
-        <button class="modal-secondary" id="skipApiKey">Skip – Use Browser Voice</button>
+        <button class="modal-primary" id="saveApiKey">Save &amp; Start 🚀</button>
+        <button class="modal-secondary" id="skipApiKey">Skip – Use Scripted Mode</button>
       </div>
-
-      <div class="api-test-result hidden" id="apiTestResult"></div>
     </div>
   </div>
 
@@ -131,7 +136,7 @@
         <span class="btn-text">Start Voice Consultation</span>
         <div class="btn-glow"></div>
       </button>
-      <p class="hint-text" id="mainHintText">Powered by ElevenLabs · Works in Chrome &amp; Edge</p>
+      <p class="hint-text" id="mainHintText">Works in Chrome &amp; Edge · Powered by AI</p>
     </section>
 
     <!-- Agent Interface -->
@@ -197,13 +202,10 @@
         </div>
 
         <div class="result-why" id="resultWhy"></div>
-
         <div class="result-benefits" id="resultBenefits"></div>
 
         <div class="result-cta">
-          <a href="https://www.indusind.com/in/en/personal/cards/credit-card/eazydiner-indusind-bank-credit-card.html" target="_blank" class="apply-btn" id="applyBtn">
-            Apply Now 🚀
-          </a>
+          <a href="#" target="_blank" class="apply-btn" id="applyBtn">Apply Now 🚀</a>
           <button class="restart-btn" id="restartBtn">Start Over</button>
         </div>
       </div>
@@ -217,73 +219,24 @@
             <div class="compare-col sig-col">💎 Signature</div>
             <div class="compare-col plat-col">⚡ Platinum</div>
           </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Annual Fee</div>
-            <div class="compare-col sig-col">₹1,999 + taxes</div>
-            <div class="compare-col plat-col">Lifetime Free ✅</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">EazyDiner Prime</div>
-            <div class="compare-col sig-col">1 Year (₹3,550 value)</div>
-            <div class="compare-col plat-col">3 Months (₹1,095 value)</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Dining Discount</div>
-            <div class="compare-col sig-col">25%–50% off</div>
-            <div class="compare-col plat-col">25%–50% off</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">PayEazy Savings</div>
-            <div class="compare-col sig-col">25% off (up to ₹1,000)</div>
-            <div class="compare-col plat-col">20% off (up to ₹500)</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Dining Reward Points</div>
-            <div class="compare-col sig-col">10 pts / ₹100</div>
-            <div class="compare-col plat-col">2 pts / ₹100</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Other Spends</div>
-            <div class="compare-col sig-col">4 pts / ₹100</div>
-            <div class="compare-col plat-col">2 pts / ₹100</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Free Movies</div>
-            <div class="compare-col sig-col">2/month (BookMyShow)</div>
-            <div class="compare-col plat-col">—</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Airport Lounge</div>
-            <div class="compare-col sig-col">2 visits / quarter</div>
-            <div class="compare-col plat-col">—</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Free Drink</div>
-            <div class="compare-col sig-col">At partner restaurants ✅</div>
-            <div class="compare-col plat-col">—</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Welcome Gift</div>
-            <div class="compare-col sig-col">2,000 pts + hotel voucher</div>
-            <div class="compare-col plat-col">—</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Fuel Surcharge Waiver</div>
-            <div class="compare-col sig-col">1% (₹500–₹3,000)</div>
-            <div class="compare-col plat-col">1% (₹400–₹4,000)</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-col label-col">Best For</div>
-            <div class="compare-col sig-col">Heavy diners &amp; travelers</div>
-            <div class="compare-col plat-col">Casual diners &amp; beginners</div>
-          </div>
+          <div class="compare-row"><div class="compare-col label-col">Annual Fee</div><div class="compare-col sig-col">₹1,999 + taxes</div><div class="compare-col plat-col">Lifetime Free ✅</div></div>
+          <div class="compare-row"><div class="compare-col label-col">EazyDiner Prime</div><div class="compare-col sig-col">1 Year (₹3,550 value)</div><div class="compare-col plat-col">3 Months (₹1,095 value)</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Dining Discount</div><div class="compare-col sig-col">25%–50% off</div><div class="compare-col plat-col">25%–50% off</div></div>
+          <div class="compare-row"><div class="compare-col label-col">PayEazy Savings</div><div class="compare-col sig-col">25% off (up to ₹1,000)</div><div class="compare-col plat-col">20% off (up to ₹500)</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Dining Reward Points</div><div class="compare-col sig-col">10 pts / ₹100</div><div class="compare-col plat-col">2 pts / ₹100</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Other Spends</div><div class="compare-col sig-col">4 pts / ₹100</div><div class="compare-col plat-col">2 pts / ₹100</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Free Movies</div><div class="compare-col sig-col">2/month (BookMyShow)</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Airport Lounge</div><div class="compare-col sig-col">2 visits / quarter</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Free Drink</div><div class="compare-col sig-col">At partner restaurants ✅</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Welcome Gift</div><div class="compare-col sig-col">2,000 pts + hotel voucher</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Best For</div><div class="compare-col sig-col">Heavy diners &amp; travelers</div><div class="compare-col plat-col">Casual diners &amp; beginners</div></div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>Powered by EazyDiner × IndusInd Bank · Voice by <a href="https://elevenlabs.io" target="_blank" class="el-link">ElevenLabs</a> · AI Voice Agent Demo</p>
+    <p>Powered by EazyDiner × IndusInd Bank · AI by <a href="https://aistudio.google.com" target="_blank" class="el-link">Google Gemini</a> · Voice by <a href="https://elevenlabs.io" target="_blank" class="el-link">ElevenLabs</a></p>
   </footer>
 
   <script src="agent.js"></script>
