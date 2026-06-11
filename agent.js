@@ -146,6 +146,8 @@ const restartBtn    = $('restartBtn');
 const elBadge       = $('elBadge');
 const elBadgeText   = $('elBadgeText');
 const mainHintText  = $('mainHintText');
+const textInput     = $('textInput');
+const textSendBtn   = $('textSendBtn');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -304,7 +306,7 @@ function startListening() {
   if (!SR) { micTip.textContent = '⚠️ Voice not supported — use the buttons below'; return; }
 
   const rec = new SR();
-  rec.lang = 'en-IN'; rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
+  rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
 
   let gotResult = false;
   state.isListening = true;
@@ -634,6 +636,16 @@ function showApiResult(id, type, msg) {
   const el = $(id);
   el.textContent = msg; el.className = `api-test-result ${type}`; el.classList.remove('hidden');
 }
+
+// ─── Text Input Fallback ─────────────────────────────────────────────────────
+function submitTextInput() {
+  const text = textInput.value.trim();
+  if (!text || state.isSpeaking) return;
+  textInput.value = '';
+  handleUserInput(text);
+}
+textSendBtn.addEventListener('click', submitTextInput);
+textInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitTextInput(); });
 
 // ─── Main Buttons ─────────────────────────────────────────────────────────────
 startBtn.addEventListener('click', async () => {
