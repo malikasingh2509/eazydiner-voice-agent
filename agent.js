@@ -149,35 +149,58 @@ class Priya {
     else if (/open|either|both|doesn't matter|dont mind/i.test(m))                               this.sig  += 1;
   }
 
+  isRelevant(msg) {
+    const m = msg.toLowerCase();
+    const patterns = [
+      /often|daily|week|month|occasion|rarely|frequent|seldom|sometimes|regular|\d+\s*times/i,  // Q0 frequency
+      /premium|fine.?din|fancy|upscale|casual|regular|normal|simple|mix|both|anywhere/i,        // Q1 style
+      /\d{3,}|\d+k|thousand|above|below|high|low|spend|budget|monthly|income|salary/i,          // Q2 spending
+      /travel|lounge|airport|movie|cinema|entertainment|yes|no|neither|both|don.?t/i,           // Q3 lifestyle
+      /fee|free|annual|lifetime|charge|worth|okay|fine|prefer|open|either|paid/i,               // Q4 fee preference
+    ];
+    const p = patterns[Math.min(this.step, patterns.length - 1)];
+    return p ? p.test(m) : true;
+  }
+
   respond(userMsg) {
-    // First message = introduction
     if (!userMsg) {
-      return `Hi there! This is Priya calling from EazyDiner's card advisory team. I'm here to help you find the best credit card for your lifestyle — it'll just take a couple of minutes! ${this.currentQuestion()}`;
+      return `Hi there! This is Priya from EazyDiner's card advisory team. Quick 2-minute chat to find your perfect credit card! ${this.currentQuestion()}`;
     }
 
-    // Off-topic → reply warmly but DON'T advance
-    if (this.isOffTopic(userMsg)) {
-      return this.offTopicReply(userMsg);
+    const m = userMsg.toLowerCase();
+
+    // --- Handle math expressions anywhere in message ---
+    const mathMatch = userMsg.match(/(\d+)\s*([\+\-\*\/x])\s*(\d+)/);
+    if (mathMatch) {
+      const ops = { '+': (a,b)=>a+b, '-': (a,b)=>a-b, '*': (a,b)=>a*b, 'x': (a,b)=>a*b, '/': (a,b)=>a/b };
+      const a = parseInt(mathMatch[1]), op = mathMatch[2], b = parseInt(mathMatch[3]);
+      const result = ops[op] ? ops[op](a, b) : '?';
+      return `Ha! ${a} ${op} ${b} = ${result}! You're sharp. Now, ${this.currentQuestion()}`;
     }
 
-    // Score and advance
+    // --- Pure social greetings / who-are-you ---
+    if (this.isOffTopic(m)) return this.offTopicReply(userMsg);
+
+    // --- Relevance check: does the answer match what we asked? ---
+    if (!this.isRelevant(m)) {
+      return `I didn't quite catch that! Let me ask again — ${this.currentQuestion()}`;
+    }
+
+    // --- Score valid answer and advance ---
     this.score(userMsg);
     this.step++;
 
-    const acks = ['Got it!', 'That\'s really helpful!', 'I see!', 'Perfect!', 'Great to know!', 'Understood!'];
+    const acks = ['Got it!', "That's helpful!", 'Perfect!', 'Great to know!', 'I see!', 'Nice!'];
     const ack  = acks[Math.floor(Math.random() * acks.length)];
 
-    // Enough info or last question answered → recommend
     const enoughInfo = this.step >= 5 || (this.step >= 3 && (this.sig >= 7 || this.plat >= 7));
     if (enoughInfo) {
       const winner = this.sig >= this.plat ? 'signature' : 'platinum';
       if (winner === 'signature') {
-        return `${ack} Based on everything you've shared, I'd confidently recommend the EazyDiner Signature Card! Your lifestyle — the dining frequency, spending level, and love for premium experiences — makes this card an amazing value. The benefits easily outweigh the annual fee. Shall we get you started? [RECOMMEND:signature]`;
+        return `${ack} Based on what you've shared, I'd confidently recommend the EazyDiner Signature Card! Your lifestyle makes this card an amazing value — the benefits easily outweigh the annual fee. Want to apply today? [RECOMMEND:signature]`;
       }
-      return `${ack} Based on our chat, the EazyDiner Platinum Card is absolutely perfect for you! Zero annual fee, yet you still get 25 to 50 percent off at over 2,000 restaurants. All the dining benefits with no commitment at all. Ready to apply? [RECOMMEND:platinum]`;
+      return `${ack} Based on our chat, the EazyDiner Platinum Card is perfect for you! Zero annual fee, yet 25–50% off dining at 2,000+ restaurants. All the perks, zero commitment. Ready to apply? [RECOMMEND:platinum]`;
     }
-
-    // Next question
     return `${ack} ${this.currentQuestion()}`;
   }
 }
