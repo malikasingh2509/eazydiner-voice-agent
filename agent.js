@@ -1,8 +1,8 @@
 /**
- * EazyDiner Voice Agent — Groq AI + ElevenLabs
- * AI Brain : Groq (free) — llama-3.3-70b-versatile
- * Voice TTS: ElevenLabs API → Browser fallback
- * Voice STT: Web Speech Recognition (Chrome/Edge)
+ * EazyDiner Voice Agent
+ * AI Brain  : Pollinations AI — FREE, NO API KEY NEEDED
+ * Voice TTS  : ElevenLabs (optional) → Browser fallback
+ * Voice STT  : Web Speech Recognition (Chrome / Edge)
  */
 
 // ─── Card Data ────────────────────────────────────────────────────────────────
@@ -18,11 +18,11 @@ const CARDS = {
       { icon: '🍽️', title: 'Complimentary Prime (1 Year)',   desc: '₹3,550 value – 25–50% off at 2,000+ premium restaurants' },
       { icon: '💸', title: 'Maximum PayEazy Savings',         desc: 'Extra 25% off up to ₹1,000 per dining transaction' },
       { icon: '⭐', title: 'Premium Reward Points',           desc: '10 pts/₹100 on dining, 4 pts/₹100 on all other spends' },
-      { icon: '🎬', title: '2 Free Movies/Month',             desc: 'BookMyShow – up to ₹200 off per ticket' },
+      { icon: '🎬', title: '2 Free Movies / Month',           desc: 'BookMyShow – up to ₹200 off per ticket' },
       { icon: '✈️', title: 'Airport Lounge Access',           desc: '2 complimentary domestic lounge visits per quarter' },
-      { icon: '🍹', title: 'Free Premium Drink',              desc: 'Complimentary premium drink at select partner restaurants' },
+      { icon: '🍹', title: 'Free Premium Drink',              desc: 'Complimentary drink at select partner restaurants' },
       { icon: '🎁', title: 'Welcome Gift',                    desc: '2,000 bonus points + The Postcard Hotel stay voucher' },
-      { icon: '⛽', title: 'Fuel Surcharge Waiver',           desc: '1% waiver on ₹500–₹3,000 transactions (max ₹250/cycle)' },
+      { icon: '⛽', title: 'Fuel Surcharge Waiver',           desc: '1% waiver on ₹500–₹3,000 transactions' },
     ],
   },
   platinum: {
@@ -33,19 +33,19 @@ const CARDS = {
     fee: 'Lifetime Free – Zero annual charges',
     tagline: 'Best for casual diners, beginners & cost-conscious users',
     benefits: [
-      { icon: '🆓', title: 'Lifetime Free Card',          desc: 'Absolutely zero joining or annual fee – ever' },
+      { icon: '🆓', title: 'Lifetime Free Card',              desc: 'Absolutely zero joining or annual fee – ever' },
       { icon: '🍽️', title: 'Complimentary Prime (3 Months)', desc: '₹1,095 value – 25–50% off at 2,000+ restaurants' },
-      { icon: '📱', title: 'PayEazy Discount',            desc: 'Extra 20% off up to ₹500 (3 times/month via app)' },
-      { icon: '🔄', title: 'Renewable Prime',             desc: 'Renew for 3 months by spending ₹30,000 per quarter' },
-      { icon: '💳', title: 'Earn Reward Points',          desc: '2 pts/₹100 on all eligible spends (except fuel)' },
-      { icon: '🎯', title: 'EazyPoints Bonus',            desc: '2X EazyPoints on every EazyDiner app booking' },
-      { icon: '⛽', title: 'Fuel Surcharge Waiver',       desc: '1% waiver on ₹400–₹4,000 transactions (max ₹250/cycle)' },
-      { icon: '💼', title: 'No Risk Entry',               desc: 'Perfect starter card with full dining benefits, zero commitment' },
+      { icon: '📱', title: 'PayEazy Discount',                desc: 'Extra 20% off up to ₹500, 3 times/month via app' },
+      { icon: '🔄', title: 'Renewable Prime',                 desc: 'Renew for 3 months by spending ₹30,000 per quarter' },
+      { icon: '💳', title: 'Earn Reward Points',              desc: '2 pts/₹100 on all eligible spends (except fuel)' },
+      { icon: '🎯', title: 'EazyPoints Bonus',                desc: '2X EazyPoints on every EazyDiner app booking' },
+      { icon: '⛽', title: 'Fuel Surcharge Waiver',           desc: '1% waiver on ₹400–₹4,000 transactions' },
+      { icon: '💼', title: 'No Risk Entry',                   desc: 'Perfect starter card – full dining benefits, zero commitment' },
     ],
   },
 };
 
-// ─── Groq System Prompt ───────────────────────────────────────────────────────
+// ─── AI System Prompt ─────────────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are Priya, a warm and friendly sales advisor calling from EazyDiner's card advisory team. You are having a real voice conversation with a customer to help them choose between two EazyDiner credit cards.
 
 THE TWO CARDS:
@@ -67,33 +67,29 @@ PLATINUM CARD (LIFETIME FREE - zero fee ever):
 
 YOUR PERSONALITY:
 - You are warm, natural, conversational — like a real human on a phone call
-- You respond to ANYTHING the customer says — even off-topic questions
-- If someone asks "what is 2+2" you answer "Ha, that's 4! But back to helping you find the perfect card..."
-- You naturally steer the conversation back to understanding their needs
-- You are NOT a robot. You do NOT follow a fixed script.
+- You respond naturally to ANYTHING the customer says, even off-topic questions
+- If someone says something unrelated, give a brief friendly reply then steer back to the card topic
+- You are NOT a robot. You do NOT follow a fixed script. Be spontaneous.
 
 YOUR GOAL:
-- Introduce yourself and the purpose of the call
+- Introduce yourself and purpose of call
 - Understand the customer through natural conversation (dining habits, spending, lifestyle, fee preference)
-- After enough info (usually 4-5 exchanges), recommend one card with clear reasoning
+- After 4-5 exchanges, recommend ONE card with clear personal reasoning
 - Encourage them to apply
 
-CRITICAL RULES:
-- Keep every response SHORT — maximum 2-3 sentences (this is a VOICE call)
+RULES — VERY IMPORTANT:
+- Keep EVERY response to 2-3 sentences MAXIMUM (this is a VOICE call)
 - Ask only ONE question at a time
 - Never ask about credit score — customer already has a good one
-- When you are ready to make your final recommendation, end your message with [RECOMMEND:signature] or [RECOMMEND:platinum] (do NOT say this out loud, it's a system tag)
-- Be spontaneous and human — vary your language, don't repeat same phrases`;
+- When ready to make your final recommendation, end your message with the marker [RECOMMEND:signature] or [RECOMMEND:platinum] — do NOT say this out loud, it is a system tag only`;
 
-// ─── Groq Config ──────────────────────────────────────────────────────────────
-const GROQ = {
-  apiKey:  '',
-  enabled: false,
-  model:   'llama-3.3-70b-versatile',
+// ─── AI Config (Pollinations — No key needed) ─────────────────────────────────
+const AI = {
   history: [],
+  enabled: true,   // always on — no key required
 };
 
-// ─── ElevenLabs Config ────────────────────────────────────────────────────────
+// ─── ElevenLabs (optional premium voice) ─────────────────────────────────────
 const EL = {
   apiKey:       '',
   voiceId:      'EXAVITQu4vr4xnSDxMaL',
@@ -102,29 +98,16 @@ const EL = {
   currentAudio: null,
 };
 
-// ─── Scripted fallback ────────────────────────────────────────────────────────
-const CONVERSATION = [
-  { step: 0, agentText: `Hi there! This is Priya calling from EazyDiner's card advisory team. I'd love to help you find the perfect EazyDiner credit card for your lifestyle — it'll just take a couple of minutes. Does that sound good?`, quickReplies: ['Yes, go ahead!', 'Sure!', 'Sounds great'], scoring: null },
-  { step: 1, agentText: `Great! How often do you typically dine out — several times a week, a few times a month, or just occasionally?`, quickReplies: ['Several times a week', 'A few times a month', 'Occasionally'], scoring: { 'several times': { signature: 3, platinum: 1 }, 'few times a month': { signature: 1, platinum: 2 }, 'occasionally': { signature: 0, platinum: 3 } } },
-  { step: 2, agentText: `Nice! Do you prefer premium fine-dining restaurants, or are you more of a casual dining person?`, quickReplies: ['Premium / fine dining', 'Casual & variety', 'Mix of both'], scoring: { 'premium': { signature: 3, platinum: 0 }, 'fine dining': { signature: 3, platinum: 0 }, 'casual': { signature: 0, platinum: 3 }, 'mix': { signature: 2, platinum: 2 } } },
-  { step: 2, agentText: `What's your approximate monthly spend overall — above ₹20,000, between ₹10–20k, or below ₹10,000?`, quickReplies: ['Above ₹20,000/month', '₹10,000–₹20,000', 'Below ₹10,000'], scoring: { 'above': { signature: 3, platinum: 0 }, '20,000': { signature: 2, platinum: 1 }, '10,000': { signature: 1, platinum: 2 }, 'below': { signature: 0, platinum: 3 } } },
-  { step: 3, agentText: `Do you travel frequently and value airport lounge access? And do you enjoy free movie tickets?`, quickReplies: ['Yes, I travel + love movies!', 'Travel but no movies', 'Not into either'], scoring: { 'travel': { signature: 3, platinum: 0 }, 'movies': { signature: 2, platinum: 0 }, 'yes': { signature: 3, platinum: 0 }, 'not': { signature: 0, platinum: 3 } } },
-  { step: 3, agentText: `Last one — are you okay with a ₹1,999 annual fee if the savings are much higher, or do you prefer a completely free card?`, quickReplies: ['Fine with fee if savings are higher', 'Prefer no annual fee', 'Open to either'], scoring: { 'fine': { signature: 3, platinum: 0 }, 'savings': { signature: 2, platinum: 0 }, 'no annual': { signature: 0, platinum: 3 }, 'prefer no': { signature: 0, platinum: 3 }, 'open': { signature: 1, platinum: 1 } } },
-];
-
-// ─── App State ────────────────────────────────────────────────────────────────
+// ─── State ────────────────────────────────────────────────────────────────────
 const state = {
-  conversationIndex: 0,
-  scores:       { signature: 0, platinum: 0 },
-  answers:      {},
-  synth:        window.speechSynthesis,
-  recognition:  null,
-  isListening:  false,
-  isSpeaking:   false,
-  manualStop:   false,   // ← FIX: prevents auto-restart when user taps to stop
-  voices:       [],
+  synth:          window.speechSynthesis,
+  recognition:    null,
+  isListening:    false,
+  isSpeaking:     false,
+  manualStop:     false,
+  voices:         [],
   preferredVoice: null,
-  turnCount:    0,
+  turnCount:      0,
 };
 
 // ─── DOM Refs ─────────────────────────────────────────────────────────────────
@@ -169,7 +152,8 @@ function setProgress(n) {
 // ─── Mic UI ───────────────────────────────────────────────────────────────────
 function setMicSpeaking() {
   state.isSpeaking = true;
-  micBtn.disabled = true;
+  micBtn.disabled  = true;
+  if (textInput) textInput.disabled = true;
   micBtn.className = 'mic-btn speaking';
   micLabel.textContent = 'Agent Speaking';
   speakingInd.className = 'speaking-indicator speaking';
@@ -179,26 +163,27 @@ function setMicSpeaking() {
 
 function setMicIdle() {
   state.isSpeaking = false;
-  micBtn.disabled = false;
+  micBtn.disabled  = false;
+  if (textInput) textInput.disabled = false;
   micBtn.className = 'mic-btn idle';
   micLabel.textContent = 'Tap to Speak';
-  micTip.textContent = '👆 Tap the mic and speak your answer';
+  micTip.textContent   = '👆 Tap mic or type your answer below';
   speakingInd.className = 'speaking-indicator';
   document.querySelector('.avatar-ring').classList.remove('active');
-  agentStatus.textContent = 'Your turn — tap mic or use buttons below';
+  agentStatus.textContent = 'Your turn — speak or type below';
 }
 
 function setMicListening() {
   micBtn.className = 'mic-btn listening';
   micLabel.textContent = 'Tap to Stop 🟥';
-  micTip.textContent = '🟢 Speak now… tap button again to stop';
+  micTip.textContent   = '🟢 Listening… speak now or type below';
   speakingInd.className = 'speaking-indicator listening';
   agentStatus.textContent = 'Listening…';
 }
 
 // ─── ElevenLabs TTS ───────────────────────────────────────────────────────────
 async function elevenLabsSpeak(text) {
-  agentStatus.innerHTML = 'Generating voice<span class="el-loading-dots"><span class="el-loading-dot"></span><span class="el-loading-dot"></span><span class="el-loading-dot"></span></span>';
+  agentStatus.textContent = 'Generating voice…';
   try {
     const res = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${EL.voiceId}?output_format=mp3_44100_128`,
@@ -207,7 +192,7 @@ async function elevenLabsSpeak(text) {
         body: JSON.stringify({ text, model_id: EL.modelId,
           voice_settings: { stability: 0.48, similarity_boost: 0.75, style: 0.3, use_speaker_boost: true } }) }
     );
-    if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e?.detail?.message || `HTTP ${res.status}`); }
+    if (!res.ok) throw new Error(`EL ${res.status}`);
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const audio = new Audio(url);
@@ -219,7 +204,7 @@ async function elevenLabsSpeak(text) {
       audio.play().catch(reject);
     });
   } catch(err) {
-    console.error('EL error:', err);
+    console.warn('EL error, falling back:', err.message);
     await browserSpeak(text);
   } finally {
     EL.currentAudio = null;
@@ -255,7 +240,7 @@ function browserSpeak(text) {
   });
 }
 
-// ─── Unified speak ────────────────────────────────────────────────────────────
+// ─── Speak (unified) ──────────────────────────────────────────────────────────
 async function speak(text) {
   setMicSpeaking();
   try {
@@ -266,27 +251,28 @@ async function speak(text) {
   }
 }
 
-// ─── Groq AI ──────────────────────────────────────────────────────────────────
-async function groqChat(userMessage) {
-  if (userMessage) GROQ.history.push({ role: 'user', content: userMessage });
+// ─── Pollinations AI — No Key Required ───────────────────────────────────────
+async function aiChat(userMessage) {
+  if (userMessage) AI.history.push({ role: 'user', content: userMessage });
 
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const res = await fetch('https://text.pollinations.ai/', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${GROQ.apiKey}`, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: GROQ.model,
-      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...GROQ.history],
-      max_tokens: 180,
-      temperature: 0.85,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...AI.history,
+      ],
+      model:  'openai',
+      seed:   Math.floor(Math.random() * 9999),
+      stream: false,
     }),
   });
 
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
-
-  const text = data.choices?.[0]?.message?.content?.trim();
-  if (!text) throw new Error('Empty response');
-  GROQ.history.push({ role: 'assistant', content: text });
+  if (!res.ok) throw new Error(`AI error ${res.status}`);
+  const text = (await res.text()).trim();
+  if (!text) throw new Error('Empty AI response');
+  AI.history.push({ role: 'assistant', content: text });
   return text;
 }
 
@@ -294,23 +280,22 @@ function extractRecommendation(text) {
   const m = text.match(/\[RECOMMEND:(signature|platinum)\]/i);
   return m ? m[1].toLowerCase() : null;
 }
-
 function cleanForSpeech(text) {
   return text.replace(/\[RECOMMEND:(signature|platinum)\]/gi, '').trim();
 }
 
-// ─── Speech Recognition — FIXED STOP ─────────────────────────────────────────
+// ─── Speech Recognition ───────────────────────────────────────────────────────
 function startListening() {
   if (state.isSpeaking || state.isListening) return;
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { micTip.textContent = '⚠️ Voice not supported — use the buttons below'; return; }
+  if (!SR) { micTip.textContent = '⚠️ Mic not supported — use the text box below'; return; }
 
   const rec = new SR();
   rec.lang = 'en-US'; rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
 
   let gotResult = false;
   state.isListening = true;
-  state.manualStop  = false;   // reset manual stop flag
+  state.manualStop  = false;
   setMicListening();
 
   rec.onresult = e => {
@@ -320,39 +305,31 @@ function startListening() {
   };
 
   rec.onerror = e => {
-    state.isListening = false;
-    state.recognition = null;
+    state.isListening = false; state.recognition = null;
     if (e.error === 'not-allowed') {
       setMicIdle();
-      micTip.textContent = '🔴 Mic blocked. Click the 🔴 icon in Chrome address bar → Allow mic.';
+      micTip.textContent = '🔴 Mic blocked — type your answer in the box below';
       return;
     }
-    // For no-speech / audio-capture → restart ONLY if not manually stopped
-    if (!state.manualStop && !state.isSpeaking) setTimeout(() => startListening(), 150);
+    if (!state.manualStop && !state.isSpeaking) setTimeout(() => startListening(), 200);
     else setMicIdle();
   };
 
   rec.onend = () => {
-    state.isListening = false;
-    state.recognition = null;
-    if (gotResult)         return;   // user spoke — handleUserInput takes over
-    if (state.isSpeaking)  return;   // agent speaking — don't restart
-    if (state.manualStop) { setMicIdle(); return; }  // ← user pressed stop button
-    // Chrome ended without speech — restart silently (keep button green)
-    setTimeout(() => startListening(), 150);
+    state.isListening = false; state.recognition = null;
+    if (gotResult || state.isSpeaking) return;
+    if (state.manualStop) { setMicIdle(); return; }
+    setTimeout(() => startListening(), 200);
   };
 
   state.recognition = rec;
   try { rec.start(); }
-  catch(e) { state.isListening = false; setMicIdle(); micTip.textContent = 'Could not start mic. Use buttons below.'; }
+  catch(e) { state.isListening = false; setMicIdle(); }
 }
 
 function stopListening() {
-  state.manualStop = true;   // ← tell onend NOT to restart
-  if (state.recognition) {
-    try { state.recognition.stop(); } catch(_) {}
-    state.recognition = null;
-  }
+  state.manualStop = true;
+  if (state.recognition) { try { state.recognition.stop(); } catch(_) {} state.recognition = null; }
   state.isListening = false;
   setMicIdle();
 }
@@ -360,13 +337,11 @@ function stopListening() {
 // ─── Transcript ───────────────────────────────────────────────────────────────
 function addMessage(role, text) {
   transcriptBox.querySelector('.transcript-placeholder')?.remove();
-  const wrap   = document.createElement('div');
+  const wrap = document.createElement('div');
   wrap.className = `msg ${role}`;
-  const av     = document.createElement('div');
-  av.className = 'msg-avatar';
+  const av   = document.createElement('div'); av.className = 'msg-avatar';
   av.textContent = role === 'agent' ? '👩‍💼' : '👤';
-  const bub    = document.createElement('div');
-  bub.className = 'msg-bubble';
+  const bub  = document.createElement('div'); bub.className = 'msg-bubble';
   bub.textContent = text;
   wrap.append(av, bub);
   transcriptBox.append(wrap);
@@ -393,111 +368,62 @@ function setQuickReplies(options = []) {
   });
 }
 
-// ─── Scripted fallback scoring ────────────────────────────────────────────────
-function scoreText(text, map) {
-  const lower = text.toLowerCase();
-  for (const [kw, pts] of Object.entries(map || {})) {
-    if (lower.includes(kw)) {
-      state.scores.signature += pts.signature || 0;
-      state.scores.platinum  += pts.platinum  || 0;
-      return;
-    }
-  }
-}
-
-// ─── Agent speak helper ───────────────────────────────────────────────────────
-async function agentSay(text) {
-  showTyping();
-  await sleep(350);
-  hideTyping();
-  addMessage('agent', text);
-  await speak(text);
-}
-
-// ─── Main input handler ───────────────────────────────────────────────────────
+// ─── Handle User Input ────────────────────────────────────────────────────────
 async function handleUserInput(text) {
   if (state.isSpeaking) return;
   stopListening();
   quickReplies.innerHTML = '';
   addMessage('user', text);
 
-  if (GROQ.enabled) {
-    // ══ GROQ AI MODE — real conversation ══════════════════════════════════════
-    agentStatus.textContent = 'Thinking…';
-    showTyping();
-    try {
-      const response       = await groqChat(text);
-      hideTyping();
-      const recommendation = extractRecommendation(response);
-      const clean          = cleanForSpeech(response);
-      state.turnCount++;
-      setProgress(Math.min(state.turnCount, 4));
-      await agentSay(clean);
-      if (recommendation) { await sleep(600); showResult(recommendation, clean); }
-      else startListening();
-    } catch(err) {
-      hideTyping();
-      console.error('Groq error:', err);
-      const sorry = 'Sorry, I had a small issue! Could you repeat that?';
-      addMessage('agent', sorry);
-      await speak(sorry);
-      startListening();
-    }
-  } else {
-    // ══ SCRIPTED MODE ═════════════════════════════════════════════════════════
-    const turn = CONVERSATION[state.conversationIndex];
-    scoreText(text, turn?.scoring);
-    state.conversationIndex++;
-    if (state.conversationIndex >= CONVERSATION.length) {
-      const winner  = state.scores.signature >= state.scores.platinum ? 'signature' : 'platinum';
-      const speech  = winner === 'signature'
-        ? `Based on your answers, I highly recommend the EazyDiner Signature Card! With your dining habits and lifestyle, the premium benefits — free movies, airport lounges, and ten times reward points — will easily outweigh the small annual fee. Would you like to apply today?`
-        : `The EazyDiner Platinum Card is the perfect match for you! You get all the core dining benefits with absolutely zero annual fee. It's a fantastic way to enjoy dining rewards with no commitment. Ready to apply?`;
-      await agentSay(speech);
-      await sleep(600);
-      showResult(winner, speech);
-    } else {
-      const next = CONVERSATION[state.conversationIndex];
-      setProgress(next.step);
-      await agentSay(next.agentText);
-      setQuickReplies(next.quickReplies || []);
-      startListening();
-    }
+  agentStatus.textContent = 'Thinking…';
+  showTyping();
+
+  try {
+    const response       = await aiChat(text);
+    hideTyping();
+    const recommendation = extractRecommendation(response);
+    const clean          = cleanForSpeech(response);
+    state.turnCount++;
+    setProgress(Math.min(state.turnCount, 4));
+    await agentSay(clean);
+    if (recommendation) { await sleep(600); showResult(recommendation, clean); }
+    else startListening();
+  } catch(err) {
+    hideTyping();
+    console.error('AI error:', err);
+    const sorry = "I'm having a small connection issue! Could you please repeat that?";
+    addMessage('agent', sorry);
+    await speak(sorry);
+    startListening();
   }
 }
 
-// ─── Start conversation ───────────────────────────────────────────────────────
+// ─── Agent Say ────────────────────────────────────────────────────────────────
+async function agentSay(text) {
+  showTyping(); await sleep(300); hideTyping();
+  addMessage('agent', text);
+  await speak(text);
+}
+
+// ─── Start Conversation ───────────────────────────────────────────────────────
 async function startConversation() {
   agentStatus.textContent = 'Connecting…';
   await sleep(400);
-
-  if (GROQ.enabled) {
-    agentStatus.textContent = 'Starting AI…';
-    showTyping();
-    try {
-      const intro = await groqChat('');
-      hideTyping();
-      state.turnCount = 0;
-      setProgress(0);
-      await agentSay(cleanForSpeech(intro));
-      startListening();
-    } catch(err) {
-      hideTyping();
-      console.error('Groq start error:', err);
-      GROQ.enabled = false;
-      await scriptedStart();
-    }
-  } else {
-    await scriptedStart();
+  agentStatus.textContent = 'Priya is preparing…';
+  showTyping();
+  try {
+    const intro = await aiChat('');
+    hideTyping();
+    state.turnCount = 0; setProgress(0);
+    await agentSay(cleanForSpeech(intro));
+    startListening();
+  } catch(err) {
+    hideTyping();
+    console.error('Start error:', err);
+    const fallback = "Hi there! This is Priya from EazyDiner's card advisory team. I'd love to help you find the perfect credit card. How often do you dine out?";
+    await agentSay(fallback);
+    startListening();
   }
-}
-
-async function scriptedStart() {
-  const first = CONVERSATION[0];
-  setProgress(first.step);
-  await agentSay(first.agentText);
-  setQuickReplies(first.quickReplies || []);
-  startListening();
 }
 
 // ─── Show Result ──────────────────────────────────────────────────────────────
@@ -505,12 +431,12 @@ function showResult(winner, reasoning = '') {
   agentSection.classList.add('hidden');
   resultSection.classList.remove('hidden');
   const card = CARDS[winner];
-  const pct  = 70 + Math.floor(Math.random() * 25);
+  const pct  = 72 + Math.floor(Math.random() * 22);
 
   $('resultIcon').textContent = card.icon;
   $('resultName').textContent = card.name;
   $('resultName').className   = `result-name ${winner}`;
-  $('resultWhy').textContent  = cleanForSpeech(reasoning) || `Based on your conversation, the ${card.name} is your best match.`;
+  $('resultWhy').textContent  = cleanForSpeech(reasoning) || `Based on your answers, ${card.name} is your ideal match.`;
   $('applyBtn').href          = card.applyUrl;
   $('applyBtn').className     = winner === 'platinum' ? 'apply-btn purple' : 'apply-btn';
   $('scoreValue').textContent = `${pct}% match`;
@@ -521,23 +447,15 @@ function showResult(winner, reasoning = '') {
   const benefitsEl = $('resultBenefits');
   benefitsEl.innerHTML = '';
   card.benefits.forEach(b => {
-    const el = document.createElement('div');
-    el.className = 'benefit-item';
+    const el = document.createElement('div'); el.className = 'benefit-item';
     el.innerHTML = `<div class="benefit-icon">${b.icon}</div><div class="benefit-text"><strong>${b.title}</strong>${b.desc}</div>`;
     benefitsEl.append(el);
   });
   resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ─── Modal — Tab switching ────────────────────────────────────────────────────
-document.querySelectorAll('.modal-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.modal-tab-content').forEach(c => c.classList.add('hidden'));
-    tab.classList.add('active');
-    $(`tab-${tab.dataset.tab}`).classList.remove('hidden');
-  });
-});
+// ─── Settings Modal (Voice only now) ─────────────────────────────────────────
+$('closeModal').addEventListener('click', () => setupModal.classList.add('hidden'));
 
 document.querySelectorAll('.voice-option').forEach(opt => {
   opt.addEventListener('click', () => {
@@ -548,86 +466,48 @@ document.querySelectorAll('.voice-option').forEach(opt => {
   });
 });
 
-$('toggleVis').addEventListener('click', () => { const i=$('apiKeyInput'); i.type=i.type==='password'?'text':'password'; });
-$('toggleGroqVis').addEventListener('click', () => { const i=$('groqKeyInput'); i.type=i.type==='password'?'text':'password'; });
+$('toggleVis').addEventListener('click', () => {
+  const i = $('apiKeyInput'); i.type = i.type === 'password' ? 'text' : 'password';
+});
 
-// ─── Save & Start ─────────────────────────────────────────────────────────────
 $('saveApiKey').addEventListener('click', async () => {
-  const groqKey = $('groqKeyInput').value.trim();
-  const elKey   = $('apiKeyInput').value.trim();
-  const btn     = $('saveApiKey');
-  btn.disabled  = true;
+  const elKey = $('apiKeyInput').value.trim();
+  const btn   = $('saveApiKey');
+  if (!elKey) { setupModal.classList.add('hidden'); return; }
 
-  // Test Groq key
-  if (groqKey) {
-    showApiResult('groqTestResult', 'loading', '🔄 Testing Groq AI key…');
-    try {
-      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: 'Say hi in 3 words.' }], max_tokens: 10 }),
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error.message);
-      GROQ.apiKey = groqKey; GROQ.enabled = true;
-      sessionStorage.setItem('groq_api_key', groqKey);
-      showApiResult('groqTestResult', 'success', '✅ Groq AI connected! Priya will now respond naturally to anything.');
-    } catch(err) {
-      showApiResult('groqTestResult', 'error', `❌ ${err.message}`);
-      btn.disabled = false; return;
-    }
+  btn.disabled = true;
+  EL.modelId = $('modelSelect').value;
+  const sv = document.querySelector('.voice-option.selected');
+  if (sv) EL.voiceId = sv.dataset.voice;
+
+  showApiResult('apiTestResult', 'loading', '🔄 Testing ElevenLabs key…');
+  try {
+    const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${EL.voiceId}?output_format=mp3_44100_128`, {
+      method: 'POST',
+      headers: { 'xi-api-key': elKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'Hello!', model_id: EL.modelId, voice_settings: { stability: 0.5, similarity_boost: 0.75 } }),
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.detail?.message||`Status ${res.status}`); }
+    EL.apiKey = elKey; EL.enabled = true;
+    sessionStorage.setItem('el_api_key', elKey);
+    showApiResult('apiTestResult', 'success', '✅ ElevenLabs connected! Priya now has a human voice.');
+    setBadge('AI + ElevenLabs ✓', true);
+    await sleep(1500);
+  } catch(err) {
+    showApiResult('apiTestResult', 'error', `❌ ${err.message}`);
+    btn.disabled = false; return;
   }
-
-  // Test ElevenLabs key
-  if (elKey) {
-    EL.modelId = $('modelSelect').value;
-    const sv = document.querySelector('.voice-option.selected');
-    if (sv) EL.voiceId = sv.dataset.voice;
-    showApiResult('apiTestResult', 'loading', '🔄 Testing ElevenLabs key…');
-    try {
-      const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${EL.voiceId}?output_format=mp3_44100_128`, {
-        method: 'POST',
-        headers: { 'xi-api-key': elKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: 'Hello!', model_id: EL.modelId, voice_settings: { stability: 0.5, similarity_boost: 0.75 } }),
-      });
-      if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e?.detail?.message||`Status ${res.status}`); }
-      EL.apiKey = elKey; EL.enabled = true;
-      sessionStorage.setItem('el_api_key', elKey);
-      showApiResult('apiTestResult', 'success', '✅ ElevenLabs voice connected!');
-    } catch(err) {
-      showApiResult('apiTestResult', 'error', `❌ ${err.message}`);
-      btn.disabled = false; return;
-    }
-  }
-
-  // Update badge
-  if (GROQ.enabled && EL.enabled)  setBadge('Groq AI + ElevenLabs ✓', true);
-  else if (GROQ.enabled)            setBadge('Groq AI ✓', true);
-  else if (EL.enabled)              setBadge('ElevenLabs ✓', true);
-  else                              setBadge('Browser Voice', false);
-
-  mainHintText.textContent = GROQ.enabled
-    ? '🧠 AI-powered by Groq · Priya responds to anything you say'
-    : '🔊 Browser voice · Scripted conversation mode';
-
   btn.disabled = false;
-  await sleep(1200);
   setupModal.classList.add('hidden');
 });
 
 $('skipApiKey').addEventListener('click', () => {
-  GROQ.enabled = false; EL.enabled = false;
-  setBadge('Browser Voice', false);
-  mainHintText.textContent = 'Using browser voice · Scripted mode';
   setupModal.classList.add('hidden');
 });
 
 $('settingsBtn').addEventListener('click', () => {
-  const sg = sessionStorage.getItem('groq_api_key');
   const se = sessionStorage.getItem('el_api_key');
-  if (sg) $('groqKeyInput').value = sg;
-  if (se) $('apiKeyInput').value  = se;
-  $('groqTestResult').classList.add('hidden');
+  if (se) $('apiKeyInput').value = se;
   $('apiTestResult').classList.add('hidden');
   setupModal.classList.remove('hidden');
 });
@@ -637,51 +517,48 @@ function showApiResult(id, type, msg) {
   el.textContent = msg; el.className = `api-test-result ${type}`; el.classList.remove('hidden');
 }
 
-// ─── Text Input Fallback ─────────────────────────────────────────────────────
-function submitTextInput() {
+// ─── Text Input ───────────────────────────────────────────────────────────────
+function submitText() {
   const text = textInput.value.trim();
   if (!text || state.isSpeaking) return;
   textInput.value = '';
   handleUserInput(text);
 }
-textSendBtn.addEventListener('click', submitTextInput);
-textInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitTextInput(); });
+textSendBtn.addEventListener('click', submitText);
+textInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitText(); });
 
-// ─── Main Buttons ─────────────────────────────────────────────────────────────
+// ─── Mic Button ───────────────────────────────────────────────────────────────
+micBtn.addEventListener('click', () => {
+  if (state.isSpeaking || micBtn.disabled) return;
+  if (state.isListening) stopListening();
+  else startListening();
+});
+
+// ─── Start / End / Restart ────────────────────────────────────────────────────
 startBtn.addEventListener('click', async () => {
   heroSection.classList.add('hidden');
   agentSection.classList.remove('hidden');
   await startConversation();
 });
 
-// MIC BUTTON — tap to speak / tap again to stop
-micBtn.addEventListener('click', () => {
-  if (state.isSpeaking || micBtn.disabled) return;
-  if (state.isListening) {
-    stopListening();    // ← tap again = STOP
-  } else {
-    startListening();   // ← tap once = START
-  }
-});
-
 endBtn.addEventListener('click', () => {
   state.synth.cancel();
   if (EL.currentAudio) { EL.currentAudio.pause(); EL.currentAudio = null; }
-  stopListening();
-  state.isSpeaking = false;
-  const winner = GROQ.enabled
-    ? (GROQ.history.length > 3 ? 'signature' : 'platinum')
-    : (state.scores.signature >= state.scores.platinum ? 'signature' : 'platinum');
-  showResult(winner, 'Call ended early. Here is the best match based on your conversation so far.');
+  stopListening(); state.isSpeaking = false;
+  const winner = AI.history.length > 3
+    ? (AI.history.some(m => m.content.toLowerCase().includes('signature')) ? 'signature' : 'platinum')
+    : 'signature';
+  showResult(winner, 'Call ended early — here is your best match based on the conversation so far.');
 });
 
 restartBtn.addEventListener('click', () => {
   state.synth.cancel();
   if (EL.currentAudio) { EL.currentAudio.pause(); EL.currentAudio = null; }
   stopListening();
-  Object.assign(state, { conversationIndex:0, scores:{signature:0,platinum:0}, answers:{}, isSpeaking:false, isListening:false, manualStop:false, turnCount:0 });
-  GROQ.history = [];
+  Object.assign(state, { isSpeaking: false, isListening: false, manualStop: false, turnCount: 0 });
+  AI.history = [];
   micBtn.disabled = false;
+  if (textInput) { textInput.disabled = false; textInput.value = ''; }
   transcriptBox.innerHTML = '<div class="transcript-placeholder">Your conversation will appear here…</div>';
   quickReplies.innerHTML  = '';
   resultSection.classList.add('hidden');
@@ -689,18 +566,21 @@ restartBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ─── Inject disabled-mic style ────────────────────────────────────────────────
-const s = document.createElement('style');
-s.textContent = `.mic-btn:disabled{opacity:.55;cursor:not-allowed!important;pointer-events:none}`;
-document.head.appendChild(s);
-
 // ─── Init ─────────────────────────────────────────────────────────────────────
+const styleEl = document.createElement('style');
+styleEl.textContent = `.mic-btn:disabled{opacity:.5;cursor:not-allowed!important;pointer-events:none}`;
+document.head.appendChild(styleEl);
+
 window.addEventListener('DOMContentLoaded', () => {
-  setBadge('Setting up…', false);
-  const sg = sessionStorage.getItem('groq_api_key');
+  // AI is always on — no key needed
+  setBadge('AI Ready ✓', true);
+  mainHintText.textContent = '🧠 Powered by AI · No setup needed · Just start talking';
+
+  // Restore ElevenLabs key if saved
   const se = sessionStorage.getItem('el_api_key');
-  if (sg) $('groqKeyInput').value = sg;
-  if (se) $('apiKeyInput').value  = se;
-  setupModal.classList.remove('hidden');
+  if (se) { $('apiKeyInput').value = se; }
+
+  // Show modal only for optional voice upgrade
+  // (skip auto-open — AI works without it)
   document.addEventListener('click', () => { if (!state.voices.length) loadVoices(); }, { once: true });
 });

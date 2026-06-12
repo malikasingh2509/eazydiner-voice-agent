@@ -4,14 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EazyDiner Card Advisor – AI Voice Agent</title>
-  <meta name="description" content="Speak with our AI voice agent to find the best EazyDiner credit card for your dining lifestyle." />
+  <meta name="description" content="Talk to our AI voice agent Priya and find the best EazyDiner credit card for your lifestyle." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Background orbs -->
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-orb orb-3"></div>
@@ -22,96 +21,82 @@
       <span class="logo-text">EazyDiner <span class="logo-accent">Card Advisor</span></span>
     </div>
     <div class="header-right">
-      <div class="el-status-badge" id="elBadge" title="Status">
+      <div class="el-status-badge" id="elBadge">
         <span class="el-dot" id="elDot"></span>
-        <span id="elBadgeText">Setting up…</span>
+        <span id="elBadgeText">AI Ready</span>
       </div>
-      <button class="settings-btn" id="settingsBtn" title="Configure">⚙️ Settings</button>
+      <button class="settings-btn" id="settingsBtn" title="Voice Settings">⚙️ Voice</button>
     </div>
   </header>
 
-  <!-- Setup Modal -->
-  <div class="modal-overlay" id="setupModal">
+  <!-- Voice Settings Modal (optional — AI works without it) -->
+  <div class="modal-overlay hidden" id="setupModal">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-icon">🤖</div>
-        <h2 class="modal-title">Configure <span class="el-brand">Your Agent</span></h2>
-        <p class="modal-subtitle">Add an AI brain so Priya thinks &amp; responds naturally — not from a fixed script.</p>
+        <div class="modal-icon">🔊</div>
+        <h2 class="modal-title">Upgrade to <span class="el-brand">Human Voice</span></h2>
+        <p class="modal-subtitle">Optionally add an ElevenLabs key to give Priya a realistic human voice. The AI works perfectly without it too.</p>
       </div>
+      <button class="modal-close-btn" id="closeModal">✕</button>
 
-      <!-- Tabs -->
-      <div class="modal-tabs">
-        <button class="modal-tab active" data-tab="ai">🧠 AI Brain <span class="tab-badge">Recommended</span></button>
-        <button class="modal-tab" data-tab="voice">🔊 Voice</button>
-      </div>
-
-      <!-- AI Brain Tab (Gemini) -->
-      <div class="modal-tab-content" id="tab-ai">
-        <div class="ai-explainer">
-          <div class="ai-explainer-row"><span class="ai-exp-bad">❌</span><span>Without AI: Priya follows a fixed script, same every time</span></div>
-          <div class="ai-explainer-row"><span class="ai-exp-good">✅</span><span>With AI: Priya actually understands you and responds naturally</span></div>
-        </div>
-        <label class="form-label" for="groqKeyInput" style="margin-top:16px">Groq API Key <span class="free-badge">FREE</span></label>
-        <div class="input-wrap">
-          <input type="password" id="groqKeyInput" class="form-input" placeholder="gsk_..." autocomplete="off" spellcheck="false" />
-          <button class="toggle-vis" id="toggleGroqVis" title="Show/hide key">👁️</button>
-        </div>
-        <p class="form-hint">Free at <a href="https://console.groq.com" target="_blank" class="el-link">console.groq.com</a> → Sign up → API Keys → Create → Copy &amp; paste here</p>
-        <div class="api-test-result hidden" id="groqTestResult"></div>
-      </div>
-
-      <!-- Voice Tab (ElevenLabs) -->
-      <div class="modal-tab-content hidden" id="tab-voice">
+      <div class="modal-form">
         <label class="form-label" for="apiKeyInput">ElevenLabs API Key <span class="optional-badge">Optional</span></label>
         <div class="input-wrap">
-          <input type="password" id="apiKeyInput" class="form-input" placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
+          <input type="password" id="apiKeyInput" class="form-input"
+            placeholder="sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false" />
           <button class="toggle-vis" id="toggleVis" title="Show/hide key">👁️</button>
         </div>
-        <p class="form-hint">Get key at <a href="https://elevenlabs.io/app/developers/api-keys" target="_blank" class="el-link">elevenlabs.io → Developers → API Keys</a></p>
+        <p class="form-hint">Free key at <a href="https://elevenlabs.io/app/developers/api-keys" target="_blank" class="el-link">elevenlabs.io → Developers → API Keys</a></p>
 
         <label class="form-label" style="margin-top:16px">Agent Voice</label>
         <div class="voice-options" id="voiceOptions">
           <label class="voice-option selected" data-voice="EXAVITQu4vr4xnSDxMaL">
             <input type="radio" name="voice" value="EXAVITQu4vr4xnSDxMaL" checked hidden />
             <div class="vo-icon">👩‍💼</div>
-            <div class="vo-info"><div class="vo-name">Sarah</div><div class="vo-desc">Warm · Professional · Female</div></div>
+            <div class="vo-info"><div class="vo-name">Sarah</div><div class="vo-desc">Warm · Professional</div></div>
             <div class="vo-check">✓</div>
           </label>
           <label class="voice-option" data-voice="21m00Tcm4TlvDq8ikWAM">
             <input type="radio" name="voice" value="21m00Tcm4TlvDq8ikWAM" hidden />
             <div class="vo-icon">🎙️</div>
-            <div class="vo-info"><div class="vo-name">Rachel</div><div class="vo-desc">Clear · Calm · Female</div></div>
+            <div class="vo-info"><div class="vo-name">Rachel</div><div class="vo-desc">Clear · Calm</div></div>
             <div class="vo-check">✓</div>
           </label>
           <label class="voice-option" data-voice="pNInz6obpgDQGcFmaJgB">
             <input type="radio" name="voice" value="pNInz6obpgDQGcFmaJgB" hidden />
             <div class="vo-icon">🎤</div>
-            <div class="vo-info"><div class="vo-name">Adam</div><div class="vo-desc">Deep · Authoritative · Male</div></div>
+            <div class="vo-info"><div class="vo-name">Adam</div><div class="vo-desc">Deep · Authoritative</div></div>
             <div class="vo-check">✓</div>
           </label>
         </div>
 
         <label class="form-label" style="margin-top:16px">ElevenLabs Model</label>
         <select class="form-select" id="modelSelect">
-          <option value="eleven_turbo_v2_5">Turbo v2.5 – Fastest (recommended)</option>
+          <option value="eleven_turbo_v2_5">Turbo v2.5 – Fastest</option>
           <option value="eleven_multilingual_v2">Multilingual v2 – Most natural</option>
           <option value="eleven_monolingual_v1">Monolingual v1 – Stable</option>
         </select>
+
         <div class="api-test-result hidden" id="apiTestResult"></div>
       </div>
 
       <div class="modal-actions">
-        <button class="modal-primary" id="saveApiKey">Save &amp; Start 🚀</button>
-        <button class="modal-secondary" id="skipApiKey">Skip – Use Scripted Mode</button>
+        <button class="modal-primary" id="saveApiKey">Enable Human Voice 🚀</button>
+        <button class="modal-secondary" id="skipApiKey">Close – Use Browser Voice</button>
       </div>
     </div>
   </div>
 
   <main class="main">
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero" id="hero-section">
       <h1 class="hero-title">Find Your Perfect<br /><span class="gradient-text">Dining Card</span></h1>
-      <p class="hero-subtitle">Talk to our AI Sales Agent to discover which EazyDiner credit card fits your lifestyle perfectly.</p>
+      <p class="hero-subtitle">Talk to Priya, our AI advisor, and she'll recommend the best EazyDiner credit card for your lifestyle — no forms, no waiting.</p>
+
+      <div class="ai-powered-badge">
+        <span class="ai-dot-pulse"></span>
+        🧠 Powered by AI · No signup or API key needed
+      </div>
 
       <div class="cards-preview">
         <div class="card-chip signature">
@@ -136,7 +121,7 @@
         <span class="btn-text">Start Voice Consultation</span>
         <div class="btn-glow"></div>
       </button>
-      <p class="hint-text" id="mainHintText">Works in Chrome &amp; Edge · Powered by AI</p>
+      <p class="hint-text" id="mainHintText">🧠 AI-powered · Works in Chrome &amp; Edge</p>
     </section>
 
     <!-- Agent Interface -->
@@ -148,49 +133,44 @@
           <div class="speaking-indicator" id="speakingIndicator"></div>
         </div>
         <div class="agent-info">
-          <div class="agent-name">Priya – Card Advisor</div>
-          <div class="agent-status" id="agentStatus">Initializing…</div>
+          <div class="agent-name">Priya – AI Card Advisor</div>
+          <div class="agent-status" id="agentStatus">Connecting…</div>
         </div>
         <button class="end-btn" id="endBtn">End Call</button>
       </div>
 
-      <!-- Transcript -->
       <div class="transcript-box" id="transcriptBox">
         <div class="transcript-placeholder">Your conversation will appear here…</div>
       </div>
 
-      <!-- Progress Steps -->
       <div class="progress-bar-wrap">
         <div class="progress-steps" id="progressSteps">
           <div class="step active" data-step="0">Intro</div>
-          <div class="step" data-step="1">Dining Habits</div>
+          <div class="step" data-step="1">Dining</div>
           <div class="step" data-step="2">Spending</div>
           <div class="step" data-step="3">Lifestyle</div>
-          <div class="step" data-step="4">Recommendation</div>
+          <div class="step" data-step="4">Result</div>
         </div>
       </div>
 
-      <!-- Mic Control -->
       <div class="controls">
         <button class="mic-btn idle" id="micBtn">
           <span class="mic-icon">🎤</span>
           <span class="mic-label" id="micLabel">Tap to Speak</span>
           <div class="mic-pulse"></div>
         </button>
-        <div class="mic-tip" id="micTip">Press the button and speak your answer</div>
+        <div class="mic-tip" id="micTip">Tap mic to speak · Or type below</div>
       </div>
 
-      <!-- Text Input Fallback -->
       <div class="text-input-wrap" id="textInputWrap">
-        <input type="text" id="textInput" class="text-input" placeholder="Or type your answer here and press Enter…" autocomplete="off" />
+        <input type="text" id="textInput" class="text-input" placeholder="Type your answer and press Enter…" autocomplete="off" />
         <button class="text-send-btn" id="textSendBtn">Send ➤</button>
       </div>
 
-      <!-- Quick Reply Chips -->
       <div class="quick-replies" id="quickReplies"></div>
     </section>
 
-    <!-- Result Section -->
+    <!-- Result -->
     <section class="result-section hidden" id="resultSection">
       <div class="result-card" id="resultCard">
         <div class="result-header">
@@ -201,9 +181,7 @@
 
         <div class="match-score">
           <div class="score-label">Match Score</div>
-          <div class="score-bar-wrap">
-            <div class="score-bar" id="scoreBar"></div>
-          </div>
+          <div class="score-bar-wrap"><div class="score-bar" id="scoreBar"></div></div>
           <div class="score-value" id="scoreValue">0%</div>
         </div>
 
@@ -211,12 +189,12 @@
         <div class="result-benefits" id="resultBenefits"></div>
 
         <div class="result-cta">
-          <a href="https://www.indusind.com/in/en/personal/cards/credit-card/eazydiner-indusind-bank-credit-card.html" target="_blank" class="apply-btn" id="applyBtn">Apply Now 🚀</a>
+          <a href="https://www.indusind.com/in/en/personal/cards/credit-card/eazydiner-indusind-bank-credit-card.html"
+             target="_blank" class="apply-btn" id="applyBtn">Apply Now 🚀</a>
           <button class="restart-btn" id="restartBtn">Start Over</button>
         </div>
       </div>
 
-      <!-- Card Comparison -->
       <div class="comparison-section">
         <h3 class="comparison-title">Full Card Comparison</h3>
         <div class="comparison-table">
@@ -226,15 +204,13 @@
             <div class="compare-col plat-col">⚡ Platinum</div>
           </div>
           <div class="compare-row"><div class="compare-col label-col">Annual Fee</div><div class="compare-col sig-col">₹1,999 + taxes</div><div class="compare-col plat-col">Lifetime Free ✅</div></div>
-          <div class="compare-row"><div class="compare-col label-col">EazyDiner Prime</div><div class="compare-col sig-col">1 Year (₹3,550 value)</div><div class="compare-col plat-col">3 Months (₹1,095 value)</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Dining Discount</div><div class="compare-col sig-col">25%–50% off</div><div class="compare-col plat-col">25%–50% off</div></div>
-          <div class="compare-row"><div class="compare-col label-col">PayEazy Savings</div><div class="compare-col sig-col">25% off (up to ₹1,000)</div><div class="compare-col plat-col">20% off (up to ₹500)</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Dining Reward Points</div><div class="compare-col sig-col">10 pts / ₹100</div><div class="compare-col plat-col">2 pts / ₹100</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Other Spends</div><div class="compare-col sig-col">4 pts / ₹100</div><div class="compare-col plat-col">2 pts / ₹100</div></div>
+          <div class="compare-row"><div class="compare-col label-col">EazyDiner Prime</div><div class="compare-col sig-col">1 Year (₹3,550)</div><div class="compare-col plat-col">3 Months (₹1,095)</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Dining Discount</div><div class="compare-col sig-col">25–50% off</div><div class="compare-col plat-col">25–50% off</div></div>
+          <div class="compare-row"><div class="compare-col label-col">PayEazy Savings</div><div class="compare-col sig-col">25% off (₹1,000 max)</div><div class="compare-col plat-col">20% off (₹500 max)</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Reward Points</div><div class="compare-col sig-col">10 pts / ₹100 dining</div><div class="compare-col plat-col">2 pts / ₹100</div></div>
           <div class="compare-row"><div class="compare-col label-col">Free Movies</div><div class="compare-col sig-col">2/month (BookMyShow)</div><div class="compare-col plat-col">—</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Airport Lounge</div><div class="compare-col sig-col">2 visits / quarter</div><div class="compare-col plat-col">—</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Free Drink</div><div class="compare-col sig-col">At partner restaurants ✅</div><div class="compare-col plat-col">—</div></div>
-          <div class="compare-row"><div class="compare-col label-col">Welcome Gift</div><div class="compare-col sig-col">2,000 pts + hotel voucher</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Airport Lounge</div><div class="compare-col sig-col">2 visits/quarter</div><div class="compare-col plat-col">—</div></div>
+          <div class="compare-row"><div class="compare-col label-col">Welcome Gift</div><div class="compare-col sig-col">2,000 pts + hotel</div><div class="compare-col plat-col">—</div></div>
           <div class="compare-row"><div class="compare-col label-col">Best For</div><div class="compare-col sig-col">Heavy diners &amp; travelers</div><div class="compare-col plat-col">Casual diners &amp; beginners</div></div>
         </div>
       </div>
@@ -242,7 +218,7 @@
   </main>
 
   <footer class="footer">
-    <p>Powered by EazyDiner × IndusInd Bank · AI by <a href="https://aistudio.google.com" target="_blank" class="el-link">Google Gemini</a> · Voice by <a href="https://elevenlabs.io" target="_blank" class="el-link">ElevenLabs</a></p>
+    <p>Powered by EazyDiner × IndusInd Bank · AI by <a href="https://pollinations.ai" target="_blank" class="el-link">Pollinations AI</a> · Voice by <a href="https://elevenlabs.io" target="_blank" class="el-link">ElevenLabs</a></p>
   </footer>
 
   <script src="agent.js"></script>
